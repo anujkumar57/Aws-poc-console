@@ -25,8 +25,8 @@ public class AwsOperation {
 	  // user must have AWSConnector and AmazonS3FullAccess for 
 	  // this example to work
 	  AWSCredentials credentials = new BasicAWSCredentials(
-	    "**Enter Access Key Here**", 
-	    "**Enter Secret key here**");
+	    "*****Enter your Access you***********", 
+	    "*****Enter your secret key here*****");
 	  
 	  // create a client connection based on credentials
 	  AmazonS3 s3client = new AmazonS3Client(credentials);
@@ -34,8 +34,10 @@ public class AwsOperation {
 	  // create bucket - name must be unique for all S3 users
 	  String bucketName = "ak-bucket-poc";
 	  s3client.createBucket(bucketName);
+	  System.out.println("Bucket created " + bucketName);
 	  
 	  // list buckets
+	  System.out.println("List of buckets");
 	  for (Bucket bucket : s3client.listBuckets()) {
 	   System.out.println(" - " + bucket.getName());
 	  }
@@ -43,29 +45,33 @@ public class AwsOperation {
 	  // creates an object into the bucket.
 	  ByteArrayInputStream input = new ByteArrayInputStream("Hello World!".getBytes());
 	  s3client.putObject(bucketName, "hello.txt", input, new ObjectMetadata());
+	  System.out.println("Object is stored inside your bucket");
 	  
-	  // code to download the object to your desktop.
+	  // code to download the object to our desktop.
 	  s3client.getObject(
 	          new GetObjectRequest(bucketName, "hello.txt"),
 	          new File("D:\\hello.txt")
-	  );
+	     );
+	  System.out.println("File is downloaded at your location");
 	  
 	  // create folder into bucket
 	  String folderName = "testfolder1";
 	  createFolder(bucketName, folderName, s3client);
+	  System.out.println("Folder is created inside your bucket");
 	  
 	  // upload file to folder and set it to public
 	  String fileName = folderName + SUFFIX + "Bucket.txt";
 	  s3client.putObject(new PutObjectRequest(bucketName, fileName, 
 	    new File("D:\\Bucket.txt"))
 	    .withCannedAcl(CannedAccessControlList.PublicRead));
+	  System.out.println("Bucket.txt file is stored inside your folder created in your bucket.");
 	  
-	//  deleteFolder(bucketName, folderName, s3client);
-	  
-	//  // deletes bucket
-	//  s3client.deleteBucket(bucketName);
+	  // deletes bucket
+	    /*deleteFolder(bucketName, folderName, s3client);
+	    s3client.deleteBucket(bucketName);
+	*/
 	 }
-	 
+	 	 
 	 public static void createFolder(String bucketName, String folderName, AmazonS3 client) {
 	  // create meta-data for your folder and set content-length to 0
 	  ObjectMetadata metadata = new ObjectMetadata();
